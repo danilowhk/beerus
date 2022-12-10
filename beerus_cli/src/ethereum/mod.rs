@@ -25,7 +25,7 @@ pub async fn query_balance(beerus: BeerusLightClient, address: String) -> Result
     // Query the balance of the Ethereum address.
     let balance = beerus
         .ethereum_lightclient
-        .get_balance(&addr,block)
+        .get_balance(&addr, block)
         .await?;
     // Format the balance in Ether.
     let balance_in_eth = utils::format_units(balance, "ether")?;
@@ -49,10 +49,7 @@ pub async fn query_nonce(beerus: BeerusLightClient, address: String) -> Result<C
     let block = BlockTag::Latest;
 
     // Query the balance of the Ethereum address.
-    let balance = beerus
-        .ethereum_lightclient
-        .get_nonce(&addr,block)
-        .await?;
+    let balance = beerus.ethereum_lightclient.get_nonce(&addr, block).await?;
     // Format the balance in Ether.
     // let balance_in_eth = utils::format_units(balance, "ether")?;
     Ok(CommandResponse::EthereumQueryNonce(balance))
@@ -68,12 +65,8 @@ pub async fn query_nonce(beerus: BeerusLightClient, address: String) -> Result<C
 /// * If the Ethereum address is invalid.
 /// * If the balance query fails.
 pub async fn get_block_number(beerus: BeerusLightClient) -> Result<CommandResponse> {
-
     // Query the balance of the Ethereum address.
-    let block_number = beerus
-        .ethereum_lightclient
-        .get_block_number()
-        .await?;
+    let block_number = beerus.ethereum_lightclient.get_block_number().await?;
     // Format the balance in Ether.
     // let balance_in_eth = utils::format_units(balance, "ether")?;
     Ok(CommandResponse::EthereumGetBlockNumber(block_number))

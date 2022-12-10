@@ -50,8 +50,7 @@ pub enum EthereumSubCommands {
         address: String,
     },
     /// Get the latest block Number
-    GetBlockNumber {
-    },    
+    GetBlockNumber {},
 }
 
 /// StarkNet related commands.
@@ -113,7 +112,9 @@ impl Display for CommandResponse {
             CommandResponse::EthereumQueryNonce(nonce) => write!(f, "Address nonce: {nonce}"),
             // Print the state root.
             // Result looks like: 2343271987571512511202187232154229702738820280823720849834887135668366687374
-            CommandResponse::EthereumGetBlockNumber(block_number) => write!(f, "Block Number: {block_number}"),            
+            CommandResponse::EthereumGetBlockNumber(block_number) => {
+                write!(f, "Block Number: {block_number}")
+            }
             // Print the state root.
             // Result looks like: 100
             CommandResponse::StarkNetQueryStateRoot(state_root) => write!(f, "{state_root}"),

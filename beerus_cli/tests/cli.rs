@@ -56,7 +56,7 @@ mod test {
         assert_eq!("0.000000000000000123 ETH", result.to_string());
     }
 
-        /// Test the `query_balance` CLI command.
+    /// Test the `query_balance` CLI command.
     /// Given normal conditions, when query balance, then ok.
     /// Success case.
     #[tokio::test]
@@ -68,7 +68,7 @@ mod test {
         // Mock dependencies.
         ethereum_lightclient
             .expect_get_block_number()
-            .return_once(move || Ok(123));            
+            .return_once(move || Ok(123));
 
         let beerus = BeerusLightClient::new(
             config,

@@ -56,6 +56,40 @@ mod test {
         assert_eq!("0.000000000000000123 ETH", result.to_string());
     }
 
+        /// Test the `query_balance` CLI command.
+    /// Given normal conditions, when query balance, then ok.
+    /// Success case.
+    #[tokio::test]
+    async fn given_normal_conditions_when_get_block_number_then_ok() {
+        // Build mocks.
+        let (config, mut ethereum_lightclient, starknet_lightclient) = config_and_mocks();
+
+        // Given
+        // Mock dependencies.
+        ethereum_lightclient
+            .expect_get_block_number()
+            .return_once(move || Ok(123));            
+
+        let beerus = BeerusLightClient::new(
+            config,
+            Box::new(ethereum_lightclient),
+            Box::new(starknet_lightclient),
+        );
+
+        // Mock the command line arguments.
+        let cli = Cli {
+            config: None,
+            command: Commands::Ethereum(EthereumCommands {
+                command: EthereumSubCommands::GetBlockNumber {},
+            }),
+        };
+        // When
+        let result = runner::run(beerus, cli).await.unwrap();
+
+        // Then
+        assert_eq!("Block Number: 123", result.to_string());
+    }
+
     /// Test the `query_balance` CLI command.
     /// Given ethereum lightclient returns an error, when query balance, then the error is propagated.
     /// Error case.

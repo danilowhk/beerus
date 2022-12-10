@@ -43,6 +43,15 @@ pub enum EthereumSubCommands {
         #[arg(short, long, value_name = "ADDRESS")]
         address: String,
     },
+    /// Query the balance of an Ethereum address.
+    QueryNonce {
+        /// The address to query the balance of
+        #[arg(short, long, value_name = "ADDRESS")]
+        address: String,
+    },
+    /// Get the latest block Number
+    GetBlockNumber {
+    },    
 }
 
 /// StarkNet related commands.
@@ -83,6 +92,8 @@ pub enum StarkNetSubCommands {
 /// The response from a CLI command.
 pub enum CommandResponse {
     EthereumQueryBalance(String),
+    EthereumQueryNonce(u64),
+    EthereumGetBlockNumber(u64),
     StarkNetQueryStateRoot(U256),
     StarkNetQueryContract(Vec<FieldElement>),
     StarkNetQueryGetStorageAt(FieldElement),
@@ -96,25 +107,31 @@ impl Display for CommandResponse {
         match self {
             // Print the balance in Ether.
             // Result looks like: 0.000000000000000001 ETH
-            CommandResponse::EthereumQueryBalance(balance) => write!(f, "{} ETH", balance),
+            CommandResponse::EthereumQueryBalance(balance) => write!(f, "{balance} ETH"),
+            // Print the state root.
+            // Result looks like: 14564567
+            CommandResponse::EthereumQueryNonce(nonce) => write!(f, "Address nonce: {nonce}"),
             // Print the state root.
             // Result looks like: 2343271987571512511202187232154229702738820280823720849834887135668366687374
-            CommandResponse::StarkNetQueryStateRoot(state_root) => write!(f, "{}", state_root),
+            CommandResponse::EthereumGetBlockNumber(block_number) => write!(f, "Block Number: {block_number}"),            
+            // Print the state root.
+            // Result looks like: 100
+            CommandResponse::StarkNetQueryStateRoot(state_root) => write!(f, "{state_root}"),
             // Print the contract view responsee .
             // Result looks like: [123], [456]
             CommandResponse::StarkNetQueryContract(response) => {
                 let formatted_str = response
                     .iter()
                     .by_ref()
-                    .map(|s| format!("{}", s))
+                    .map(|s| format!("{s}"))
                     .collect::<Vec<String>>()
                     .join(", ");
-                write!(f, "[{}]", formatted_str)
+                write!(f, "[{formatted_str}]")
             }
             // Print the storage value.
             // Result looks like: 15527784
             CommandResponse::StarkNetQueryGetStorageAt(response) => {
-                write!(f, "{}", response)
+                write!(f, "{response}")
             }
         }
     }

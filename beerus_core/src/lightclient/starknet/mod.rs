@@ -31,6 +31,7 @@ use alloc::format;
 use async_trait::async_trait;
 use ethers::providers::{Http, Provider};
 use eyre::Result;
+#[cfg(feature = "std")]
 use mockall::automock;
 use serde::Serialize;
 use starknet::{
@@ -51,9 +52,8 @@ use url::Url;
 
 pub mod storage_proof;
 
-// #[cfg(feature="std")]
-#[automock]
-#[async_trait]
+#[cfg_attr(not(feature = "std"), async_trait(?Send))]
+#[cfg_attr(feature = "std", async_trait, automock)]
 pub trait StarkNetLightClient: Send + Sync {
     async fn start(&self) -> Result<()>;
     async fn call(&self, opts: FunctionCall, block_number: u64) -> Result<Vec<FieldElement>>;
@@ -153,7 +153,8 @@ impl StarkNetLightClientImpl {
     }
 }
 
-#[async_trait]
+#[cfg_attr(not(feature = "std"), async_trait(?Send))]
+#[cfg_attr(feature = "std", async_trait)]
 impl StarkNetLightClient for StarkNetLightClientImpl {
     async fn start(&self) -> Result<()> {
         Ok(())

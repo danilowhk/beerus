@@ -23,6 +23,7 @@ use core::u8;
 use ethers::types::{Address, Log, Transaction, H256, U256};
 use eyre::Result;
 use helios::types::{BlockTag, CallOpts, ExecutionBlock};
+#[cfg(feature = "std")]
 use mockall::automock;
 
 /// Ethereum light client trait.
@@ -30,9 +31,8 @@ use mockall::automock;
 // TODO: For now there is a dependency on Helios types, we should abstract this away eventually.
 // TODO: Maybe we can let the possibility to get access to the underlying light client anyway.
 
-// #[cfg(feature="std")]
-#[automock]
-#[async_trait]
+#[cfg_attr(not(feature = "std"), async_trait(?Send))]
+#[cfg_attr(feature = "std", async_trait, automock)]
 pub trait EthereumLightClient: Send + Sync {
     /// Start and synchronize the Ethereum light client.
     /// This function should be called before any other function.
